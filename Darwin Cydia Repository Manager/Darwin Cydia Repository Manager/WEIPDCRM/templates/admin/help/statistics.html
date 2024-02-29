@@ -1,0 +1,62 @@
+{% extends "admin/base_site.html" %}
+
+{% load i18n %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> &rsaquo;
+    {% trans "Help" %} &rsaquo; {% trans "Statistics" %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        {% trans "DataBase Status" %}
+    </div>
+    <div class="card-block">
+        {% for key,value in db_status.items %}
+            <p style="margin-bottom: 5px">{{ key }}: {{ value }}</p>
+        {% endfor %}
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        {% trans "Repo Statistics" %}
+    </div>
+    <div class="card-block">
+    {% autoescape off %}
+        {% for key,value in stat.items %}
+            <p style="margin-bottom: 5px">{% trans key %}: {{ value }}</p>
+        {% endfor %}
+        {% if settings.internal_statistics %}
+          {{ settings.internal_statistics }}
+        {% endif %}
+    {% endautoescape %}
+    </div>
+</div>
+<script type="text/javascript">
+function clean() {
+    if (confirm("{% trans "Are you sure to clean the cache?" %}")) {
+        var xhr = new XMLHttpRequest();
+        var msg = '';
+        xhr.timeout = 30000;
+        xhr.responseType = "json";
+        xhr.open("POST", "", true);
+        var body = new FormData();
+        body.append("action", "clean");
+        body.append("csrfmiddlewaretoken", '{{ csrf_token }}');
+        xhr.onload = function (e) {
+            if (this.status === 200 && this.response['status'] === true) {
+                alert('{% trans "Cache cleanup completed!" %}');
+                window.location.reload();
+            } else {
+                alert(msg = '{% trans "Fail to cleanup cache, error message has been written to the console" %}');
+                console.error(this.response['exception']);
+            }
+        };
+        xhr.send(body);
+    }
+}
+</script>
+{% endblock %}
