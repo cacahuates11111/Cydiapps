@@ -1,0 +1,32 @@
+.DS_Store
+
+# temp files
+/temp/
+
+# site resources
+/resources/
+/wwwroot/
+
+# IDE configurations
+/.idea/
+
+# static files
+/static/
+
+# databases
+*.sqlite3
+*.rdb
+*.pyc
+*.log
+*.ini
+
+# user-defined settings
+/DCRM/settings.py
+
+# server
+.user.ini
+.well-known
+
+# python virtual environment
+/venv/
+
